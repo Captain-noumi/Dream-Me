@@ -2,15 +2,28 @@ import React, { useState, useEffect } from 'react';
 import * as Icons from 'lucide-react';
 import { downloadRoadmapPDF } from '../utils/pdfGenerator';
 import { safeFetchWatsonx, safeFetchYoutube } from '../utils/apiClient';
+import { FLAGSHIP_DOMAINS } from '../utils/domainsData';
 
 export default function Phase3Dashboard({ 
-  selectedDomain, 
+  selectedDomain: rawSelectedDomain, 
   allMatchedDomains, 
   answers, 
   signals, 
   onReset,
   onSwitchDomain 
 }) {
+  // Resolve full flagship details (roadmap, resources, videoId) from local dataset
+  const fullDomainDetails = rawSelectedDomain.isFlagship
+    ? (FLAGSHIP_DOMAINS.find(d => d.id === rawSelectedDomain.id) || rawSelectedDomain)
+    : rawSelectedDomain;
+
+  const selectedDomain = {
+    ...fullDomainDetails,
+    matchPercentage: rawSelectedDomain.matchPercentage,
+    confidence: rawSelectedDomain.confidence,
+    fitReason: rawSelectedDomain.fitReason
+  };
+
   const [videoData, setVideoData] = useState(null);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [videoError, setVideoError] = useState(null);
@@ -43,7 +56,7 @@ export default function Phase3Dashboard({
     if (!selectedDomain.isFlagship) {
       fetchDynamicRoadmap();
     }
-  }, [selectedDomain]);
+  }, [rawSelectedDomain]);
 
   const fetchVideoDetails = async () => {
     setIsVideoLoading(true);

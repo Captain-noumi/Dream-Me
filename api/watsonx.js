@@ -428,9 +428,9 @@ ${qas}`;
     // 3. Make Watsonx Generation call
     let maxTokens = 1000;
     if (action === 'generate_questions') {
-      maxTokens = 200; // Low-moderate value for brief questions
+      maxTokens = 400; // Allow enough space for JSON markup structure
     } else if (action === 'generate_transparency') {
-      maxTokens = 300; // Low-moderate value for brief explanation paragraph
+      maxTokens = 500; // Allow enough space for explanation and JSON wrapper
     }
     const generatedText = await callWatsonx(accessToken, projectId, fullInput, maxTokens);
 
@@ -472,7 +472,7 @@ async function callWatsonxRaw(token, projectId, promptText, maxTokens = 1000) {
       'Accept': 'application/json',
     },
     body: JSON.stringify({
-      model_id: 'ibm/granite-4-h-small',
+      model_id: 'meta-llama/llama-3-3-70b-instruct',
       project_id: projectId,
       input: promptText,
       parameters: {
