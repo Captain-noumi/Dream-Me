@@ -422,8 +422,10 @@ Do not include any introductory or concluding text. Do not wrap in markdown code
 ${qas}`;
     }
 
-    // Combine system & user prompt into the input format
-    const fullInput = `<|system|>\n${systemPrompt}\n<|user|>\n${userPrompt}\n<|assistant|>\n`;
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt }
+    ];
 
     // 3. Make Watsonx Generation call
     let maxTokens = 1000;
@@ -432,7 +434,7 @@ ${qas}`;
     } else if (action === 'generate_transparency') {
       maxTokens = 500; // Allow enough space for explanation and JSON wrapper
     }
-    const generatedText = await callWatsonx(accessToken, projectId, fullInput, maxTokens);
+    const generatedText = await callWatsonx(accessToken, projectId, messages, maxTokens);
 
     // 4. Parse JSON out of generated response
     const parsedData = cleanAndParseJSON(generatedText);
@@ -463,8 +465,8 @@ async function getWatsonxToken(apiKey) {
   return tokenData.access_token;
 }
 
-async function callWatsonxRaw(token, projectId, promptText, maxTokens = 1000) {
-  const response = await fetch('https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29', {
+async function callWatsonxRaw(token, projectId, messages, maxTokens = 1000) {
+  const response = await fetch('https://us-south.ml.cloud.ibm.com/ml/v1/text/chat?version=2024-05-01', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -472,9 +474,9 @@ async function callWatsonxRaw(token, projectId, promptText, maxTokens = 1000) {
       'Accept': 'application/json',
     },
     body: JSON.stringify({
-      model_id: 'meta-llama/llama-3-3-70b-instruct',
+      model_id: 'ibm/granite-4-h-small',
       project_id: projectId,
-      input: promptText,
+      messages: messages,
       parameters: {
         decoding_method: 'greedy',
         max_new_tokens: maxTokens,
@@ -487,29 +489,29 @@ async function callWatsonxRaw(token, projectId, promptText, maxTokens = 1000) {
     throw new Error(`Watsonx API generation call failed with status ${response.status}: ${errText}`);
   }
   const data = await response.json();
-  if (!data.results || data.results.length === 0) {
+  if (!data.choices || data.choices.length === 0) {
     throw new Error('Watsonx API returned empty results');
   }
-  return data.results[0].generated_text;
+  return data.choices[0].message.content;
 }
 
-async function callWatsonxWithRetry(token, projectId, promptText, maxTokens = 1000, retries = 3, delay = 1000) {
+async function callWatsonxWithRetry(token, projectId, messages, maxTokens = 1000, retries = 3, delay = 1000) {
   try {
-    return await watsonxLimiter.execute(() => callWatsonxRaw(token, projectId, promptText, maxTokens));
+    return await watsonxLimiter.execute(() => callWatsonxRaw(token, projectId, messages, maxTokens));
   } catch (error) {
     const errorMsg = error.message || "";
     const isRateLimit = errorMsg.includes("429") || errorMsg.includes("rate_limit_reached_requests");
     if (isRateLimit && retries > 0) {
       console.warn(`Watsonx rate limit (429) hit. Retrying in ${delay}ms... (${retries} retries left)`);
       await new Promise(resolve => setTimeout(resolve, delay));
-      return callWatsonxWithRetry(token, projectId, promptText, maxTokens, retries - 1, delay * 2);
+      return callWatsonxWithRetry(token, projectId, messages, maxTokens, retries - 1, delay * 2);
     }
     throw error;
   }
 }
 
-async function callWatsonx(token, projectId, promptText, maxTokens = 1000) {
-  return callWatsonxWithRetry(token, projectId, promptText, maxTokens);
+async function callWatsonx(token, projectId, messages, maxTokens = 1000) {
+  return callWatsonxWithRetry(token, projectId, messages, maxTokens);
 }
 
 function cleanAndParseJSON(text) {
