@@ -472,7 +472,7 @@ async function callWatsonxRaw(token, projectId, promptText, maxTokens = 1000) {
       'Accept': 'application/json',
     },
     body: JSON.stringify({
-      model_id: 'meta-llama/llama-3-3-70b-instruct',
+      model_id: 'ibm/granite-4-h-small',
       project_id: projectId,
       input: promptText,
       parameters: {
