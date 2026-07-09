@@ -5,13 +5,15 @@ import { safeFetchWatsonx } from '../utils/apiClient';
 const OPENING_QUESTION = "Welcome to Dream Me. Don't worry if you're clueless—we'll figure this out together. To start, what is one hobby, activity, or subject you've spent time on recently that didn't feel like a chore?";
 const TOTAL_QUESTIONS_TARGET = 5;
 
-export default function Phase1Interview({ onComplete }) {
-  const [messages, setMessages] = useState([
-    { sender: 'assistant', text: OPENING_QUESTION }
-  ]);
+export default function Phase1Interview({ 
+  messages, 
+  setMessages, 
+  answers, 
+  setAnswers, 
+  onComplete 
+}) {
   const [currentQuestionText, setCurrentQuestionText] = useState(OPENING_QUESTION);
   const [inputValue, setInputValue] = useState('');
-  const [answers, setAnswers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   

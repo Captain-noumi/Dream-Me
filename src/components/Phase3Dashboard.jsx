@@ -266,7 +266,7 @@ export default function Phase3Dashboard({
 
         {/* Dynamic Label Indicator */}
         {!selectedDomain.isFlagship && (
-          <div style={{ padding: '16px 20px', backgroundColor: '#f2f2f7', border: '1px dashed var(--border-dark)', borderRadius: 'var(--radius-md)', display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div style={{ padding: '16px 20px', backgroundColor: 'var(--bg-primary)', border: '1px dashed var(--border-dark)', borderRadius: 'var(--radius-md)', display: 'flex', gap: '10px', alignItems: 'center' }}>
             <Icons.Info size={20} style={{ color: 'var(--text-secondary)' }} />
             <span style={{ fontSize: '13.5px', color: 'var(--text-primary)', fontWeight: '500' }}>
               <strong>AI-Suggested Domain:</strong> This learning roadmap is synthesized live by watsonx and is <strong>not independently verified</strong>. Videos are queried live.

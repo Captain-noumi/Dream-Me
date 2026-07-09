@@ -17,7 +17,7 @@ export const downloadRoadmapPDF = (domain, explanation, roadmap, resources, vide
   currentY += 10;
 
   doc.setFontSize(16);
-  doc.setTextColor(0, 113, 227); // #0071e3 (Apple blue)
+  doc.setTextColor(217, 70, 239); // #d946ef (Rose)
   doc.text(domain.name, 20, currentY);
   currentY += 7;
 

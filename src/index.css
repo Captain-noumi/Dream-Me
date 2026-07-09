@@ -2,32 +2,36 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-display: 'Outfit', var(--font-sans);
   
-  /* Apple Neutral Palette */
-  --bg-primary: #f5f5f7;
+  /* Light Theme (Premium Pastel Pink & Elegant Rose-Burgundy) */
+  --bg-primary: #fff2f5;
   --bg-secondary: #ffffff;
-  --bg-tertiary: #fbfbfd;
+  --bg-tertiary: #fff9fb;
   
-  --text-primary: #1d1d1f;
-  --text-secondary: #86868b;
-  --text-tertiary: #a1a1a6;
+  --text-primary: #2d0e14;
+  --text-secondary: #7c5861;
+  --text-tertiary: #aa8b93;
   
-  --accent: #0071e3;
-  --accent-hover: #0077ed;
-  --accent-light: #e8f2fc;
+  --accent: #d946ef;
+  --accent-hover: #c026d3;
+  --accent-light: #fdf2f8;
   
-  --success: #34c759;
-  --warning: #ff9500;
-  --danger: #ff3b30;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
   
-  --border-light: #e3e3e8;
-  --border-dark: #d2d2d7;
+  --border-light: #ffe4e6;
+  --border-dark: #ec4899; /* Vibrant Pink Rose border for high contrast outlines */
   
-  /* Glassmorphism & Shadow details */
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08);
+  --logo-color: #ef4444; /* Red logo color for light mode */
+  --brand-gradient: linear-gradient(135deg, #ef4444, #ff8a8a); /* Red to coral gradient */
+  --accent-shadow: rgba(217, 70, 239, 0.25);
+  
+  /* Glassmorphism & Shadow details (infused with soft pink/rose undertones) */
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(251, 207, 232, 0.4);
+  --shadow-sm: 0 2px 10px rgba(217, 70, 239, 0.02);
+  --shadow-md: 0 8px 30px rgba(217, 70, 239, 0.04);
+  --shadow-lg: 0 20px 40px rgba(45, 14, 20, 0.06);
   
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -42,6 +46,39 @@
   --delay-2: 0.1s;
   --delay-3: 0.15s;
   --delay-4: 0.2s;
+}
+
+[data-theme='dark'] {
+  /* Dark Theme (Premium Deep Velvet Rose & Radiant Electric Pink) */
+  --bg-primary: #1e0915; /* Velvet dark rose background */
+  --bg-secondary: #2c0f20; /* Rich rose card background */
+  --bg-tertiary: #381229; /* Sub-elements background */
+  
+  --text-primary: #fff0f5; /* High-contrast cream-rose text */
+  --text-secondary: #f3d8e5; /* Sub-text cream-rose */
+  --text-tertiary: #b48ba0;
+  
+  --accent: #ec4899; /* Radiant electric rose-pink */
+  --accent-hover: #d946ef;
+  --accent-light: rgba(236, 72, 153, 0.15);
+  
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  
+  --border-light: #4c1735;
+  --border-dark: #f472b6; /* Vivid pink-rose border for dark mode */
+  
+  --logo-color: #ec4899; /* Rose-pink logo color for dark mode */
+  --brand-gradient: linear-gradient(135deg, var(--accent), #fda4af);
+  --accent-shadow: rgba(236, 72, 153, 0.35);
+  
+  /* Glassmorphism & Shadow details (infused with deep ruby undertones) */
+  --glass-bg: rgba(31, 10, 20, 0.85);
+  --glass-border: rgba(244, 114, 182, 0.1);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.55);
 }
 
 /* Base Styles */
@@ -168,7 +205,7 @@ a:hover {
 }
 
 .app-logo span {
-  background: linear-gradient(135deg, #0071e3, #8f00ff);
+  background: var(--brand-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -197,7 +234,7 @@ a:hover {
 .btn-primary:hover {
   background-color: var(--accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
+  box-shadow: 0 4px 12px var(--accent-shadow);
 }
 
 .btn-primary:active {
@@ -268,7 +305,7 @@ a:hover {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
+  border: 1.5px solid var(--border-dark);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   padding: 32px;
@@ -311,7 +348,7 @@ a:hover {
   color: var(--text-primary);
   align-self: flex-start;
   border-bottom-left-radius: 4px;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border-dark);
   box-shadow: var(--shadow-sm);
 }
 
@@ -320,7 +357,7 @@ a:hover {
   color: #ffffff;
   align-self: flex-end;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.15);
+  box-shadow: 0 4px 12px var(--accent-shadow);
 }
 
 .chat-bubble-meta {
@@ -345,6 +382,7 @@ a:hover {
   border: 1px solid var(--border-dark);
   outline: none;
   background-color: var(--bg-secondary);
+  color: var(--text-primary);
   transition: all var(--transition-fast);
   resize: none;
   line-height: 1.45;
@@ -352,7 +390,7 @@ a:hover {
 
 .chat-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+  box-shadow: 0 0 0 4px var(--accent-light);
 }
 
 /* Scenario Choice Container */
@@ -521,7 +559,7 @@ a:hover {
 }
 
 .badge-ai {
-  background-color: #f2f2f7;
+  background-color: var(--bg-primary);
   color: var(--text-secondary);
   border: 1px dashed var(--border-dark);
 }
@@ -899,5 +937,120 @@ a:hover {
   
   .recommendations-title {
     font-size: 28px;
+  }
+  
+  .history-sidebar {
+    width: 100% !important;
+  }
+}
+
+/* 3. Sliding Conversation History Panel */
+.history-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(30, 9, 21, 0.45);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.history-sidebar {
+  width: 460px;
+  max-width: 100%;
+  height: 100%;
+  background-color: var(--bg-secondary);
+  border-left: 1.5px solid var(--border-dark);
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  padding: 32px 24px;
+}
+
+.history-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid var(--border-light);
+}
+
+.history-sidebar-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.history-sidebar-close {
+  background: none;
+  border: none;
+  font-size: 26px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color var(--transition-fast);
+}
+
+.history-sidebar-close:hover {
+  color: var(--accent);
+}
+
+.history-sidebar-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-right: 4px;
+}
+
+.history-bubble {
+  padding: 14px 18px;
+  border-radius: var(--radius-lg);
+  max-width: 85%;
+  line-height: 1.5;
+  font-size: 14px;
+  animation: fadeInUp var(--transition-smooth) forwards;
+}
+
+.history-bubble.assistant {
+  background-color: var(--bg-primary);
+  border: 1.5px solid var(--border-light);
+  color: var(--text-primary);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.history-bubble.user {
+  background-color: var(--accent);
+  color: #ffffff;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 12px var(--accent-shadow);
+}
+
+.history-bubble .bubble-meta {
+  font-size: 10px;
+  margin-top: 6px;
+  opacity: 0.7;
+}
+
+/* Slide in animation details */
+.animate-slide-in {
+  animation: slideInLeft var(--transition-smooth) forwards;
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
   }
 }
