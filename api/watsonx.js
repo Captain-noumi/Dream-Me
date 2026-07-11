@@ -41,8 +41,7 @@ class RateLimiter {
 
 const watsonxLimiter = new RateLimiter(2, 1000);
 
-// Server-side session history storage mapped by sessionId (capped at 10 messages/5 QA pairs per session)
-const sessions = {};
+
 
 // Mock Generator for local testing or if Watsonx credentials are not provided
 const generateMockResponse = (action, body) => {
@@ -201,10 +200,8 @@ export default async function handler(req, res) {
   const action = req.body?.action || req.query?.action;
   const sessionId = req.body?.sessionId || req.query?.sessionId || 'default';
 
-  // Handle server-side chat history clearing
+  // Handle server-side chat history clearing (stateless success callback)
   if (action === 'clear_history') {
-    sessions[sessionId] = [];
-    console.log(`Server-side chat history cleared for session: ${sessionId}`);
     return res.status(200).json({ success: true, message: 'Chat history cleared successfully' });
   }
 
@@ -234,25 +231,9 @@ export default async function handler(req, res) {
     let userPrompt = "";
 
     if (action === 'generate_questions') {
-      // Sync server-side history mapping
-      if (!sessions[sessionId]) {
-        sessions[sessionId] = [];
-      }
-      if (answers && answers.length > 0) {
-        answers.forEach(a => {
-          const exists = sessions[sessionId].some(h => h.question === a.question && h.answer === a.answer);
-          if (!exists) {
-            sessions[sessionId].push(a);
-          }
-        });
-      }
-      // Cap at last 5 QA pairs (10 messages total)
-      if (sessions[sessionId].length > 5) {
-        sessions[sessionId] = sessions[sessionId].slice(-5);
-      }
-      const history = sessions[sessionId];
+      const history = answers || [];
       const qas = history.map((a, i) => `Q${i+1}: ${a.question}\nA${i+1}: ${a.answer}`).join('\n\n');
-      const step = answers ? answers.length : history.length;
+      const step = history.length;
 
       let guidance = "";
       if (step === 1) {
@@ -290,7 +271,7 @@ ${qas}
 Generate the next personalized question (Question ${step + 1}).`;
 
     } else if (action === 'evaluate_signals') {
-      const history = (sessions[sessionId] && sessions[sessionId].length > 0) ? sessions[sessionId] : (answers || []);
+      const history = answers || [];
       const qas = history.map((a, i) => `Q${i+1}: ${a.question}\nA${i+1}: ${a.answer}`).join('\n\n');
       systemPrompt = `You are a high-fidelity Watsonx career counseling assistant.
 Analyze the user's responses to evaluate their affinity score (0 to 10) for each of these 8 categories:
@@ -404,7 +385,7 @@ Do not include any introductory or concluding text. Do not wrap in markdown code
       userPrompt = `Generate the roadmap and resource recommendations for the domain: "${domain}".`;
 
     } else if (action === 'generate_transparency') {
-      const history = (sessions[sessionId] && sessions[sessionId].length > 0) ? sessions[sessionId] : (answers || []);
+      const history = answers || [];
       const qas = history.map((a, i) => `Q${i+1}: ${a.question}\nA${i+1}: ${a.answer}`).join('\n\n');
       systemPrompt = `You are a high-fidelity Watsonx career counseling assistant.
 Explain to the user why they matched with the domain "${domain}" using evidence from their own answers.
